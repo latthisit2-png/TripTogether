@@ -1,0 +1,77 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum TripStatus {
+  OPEN
+  CONFIRMED
+  CLOSED
+}
+
+enum AvailabilityStatus {
+  AVAILABLE
+  MAYBE
+  UNAVAILABLE
+}
+
+model Trip {
+  id                  String     @id @default(uuid())
+  title               String
+  description         String?
+  location            String?
+  startDate           DateTime   @db.Date
+  endDate             DateTime   @db.Date
+  inviteToken         String     @unique
+  ownerTokenHash      String
+  status              TripStatus @default(OPEN)
+  confirmedDate       DateTime?  @db.Date
+  confirmedTimeSlots  Json?      // e.g. ["morning", "afternoon"]
+  votingClosed        Boolean    @default(false)
+  createdAt           DateTime   @default(now())
+  updatedAt           DateTime   @updatedAt
+
+  participants        TripParticipant[]
+  availabilityResponses AvailabilityResponse[]
+
+  @@index([inviteToken])
+}
+
+model TripParticipant {
+  id                   String   @id @default(uuid())
+  tripId               String
+  displayName          String
+  participantTokenHash String
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  trip                 Trip     @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  availabilityResponses AvailabilityResponse[]
+
+  @@index([tripId])
+}
+
+model AvailabilityResponse {
+  id            String             @id @default(uuid())
+  participantId String
+  tripId        String
+  availableDate DateTime           @db.Date
+  status        AvailabilityStatus
+  timeSlots     Json               @default("[]") // e.g. ["morning", "afternoon", "evening"]
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+
+  participant   TripParticipant    @relation(fields: [participantId], references: [id], onDelete: Cascade)
+  trip          Trip               @relation(fields: [tripId], references: [id], onDelete: Cascade)
+
+  @@unique([participantId, availableDate])
+  @@index([tripId])
+  @@index([participantId])
+}

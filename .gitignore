@@ -1,0 +1,14 @@
+node_modules/
+.env
+.env.local
+dist/
+build/
+.next/
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
+coverage/
+.nyc_output/
+prisma/*.db
+*.sqlite
