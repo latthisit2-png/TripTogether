@@ -119,32 +119,38 @@ export default function CreateTripPage() {
           </div>
 
           {/* Date range */}
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="label">
-                วันเริ่มต้น <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="date"
-                className="input"
-                min={today}
-                value={form.startDate}
-                onChange={(e) => setForm({ ...form, startDate: e.target.value })}
-                required
-              />
-            </div>
-            <div>
-              <label className="label">
-                วันสิ้นสุด <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="date"
-                className="input"
-                min={form.startDate || today}
-                value={form.endDate}
-                onChange={(e) => setForm({ ...form, endDate: e.target.value })}
-                required
-              />
+          <div className="bg-primary-50 border border-primary-100 rounded-xl p-4">
+            <h3 className="font-semibold text-primary-900 mb-1">📅 กำหนดช่วงเวลาที่จะให้เพื่อนโหวต</h3>
+            <p className="text-xs text-primary-600 mb-4">
+              กำหนด "กรอบเวลาคร่าวๆ" เพื่อสร้างปฏิทินให้เพื่อนเข้ามาเลือกวันที่ตัวเองว่าง (เช่น ตลอดเดือนหน้า หรือช่วงวันหยุดยาว)
+            </p>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="label">
+                  เริ่มต้นช่วงที่ให้โหวต <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="date"
+                  className="input bg-white"
+                  min={today}
+                  value={form.startDate}
+                  onChange={(e) => setForm({ ...form, startDate: e.target.value })}
+                  required
+                />
+              </div>
+              <div>
+                <label className="label">
+                  สิ้นสุดช่วงที่ให้โหวต <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="date"
+                  className="input bg-white"
+                  min={form.startDate || today}
+                  value={form.endDate}
+                  onChange={(e) => setForm({ ...form, endDate: e.target.value })}
+                  required
+                />
+              </div>
             </div>
           </div>
 
